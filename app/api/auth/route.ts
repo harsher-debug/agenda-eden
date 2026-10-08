@@ -25,3 +25,4 @@ export async function POST(req:Request){
  }catch(e){return failure(e)}
 }
 export async function DELETE(req:Request){try{if(!sameOrigin(req)||!req.headers.get('origin'))return json({error:'Origem inválida.'},403);const jar=await cookies();const token=jar.get(sessionCookie)?.value;if(token)await db().prepare('DELETE FROM email_sessions WHERE hash=?').bind(await hashToken(token)).run();jar.delete(sessionCookie);return json({ok:true})}catch(e){return failure(e)}}
+
