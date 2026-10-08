@@ -14,7 +14,7 @@ const { d1, r2 } = hostingConfig;
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
 
-const localBindingConfig = {`n  vars: { SUPABASE_URL: "https://laaqmsigwuaknsnngahz.supabase.co", SUPABASE_ANON_KEY: "sb_publishable_bqhWABTTXU2t2Pve-fgs1g_3ALxHGko" },
+const localBindingConfig = {\n  vars: { SUPABASE_URL: "https://laaqmsigwuaknsnngahz.supabase.co", SUPABASE_ANON_KEY: "sb_publishable_bqhWABTTXU2t2Pve-fgs1g_3ALxHGko" },
   main: "./build/sites-worker.ts",
   compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
@@ -98,5 +98,6 @@ export default defineConfig(async ({ command }) => {
     ],
   };
 });
+
 
 
