@@ -1,0 +1,4 @@
+import {ownCalendar,db,json,sameOrigin,failure} from '@/lib/server';
+import {notificationsReady,sendPending} from '@/lib/notifications';
+export async function GET(){try{const c=await ownCalendar();if(!c)return json({error:'Acesso restrito.'},401);const row=await db().prepare("SELECT COUNT(*) AS count FROM email_outbox WHERE calendar=? AND status='pending'").bind(c.id).first<{count:number}>();return json({ready:notificationsReady(),pending:row?.count||0,email:c.owner_email})}catch(e){return failure(e)}}
+export async function POST(req:Request){try{if(!sameOrigin(req)||!req.headers.get('origin'))return json({error:'Origem inválida.'},403);const c=await ownCalendar();if(!c)return json({error:'Acesso restrito.'},401);if(!notificationsReady())return json({error:'O envio de e-mails ainda está sendo configurado.'},503);return json(await sendPending(c.id))}catch(e){return failure(e)}}

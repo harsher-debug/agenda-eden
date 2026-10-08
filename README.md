@@ -9,17 +9,19 @@ Agenda individual com painel protegido por login e uma página pública de agend
 - Reservas públicas e manuais, bloqueios de horário e cancelamento pelo responsável.
 - Link exclusivo para clientes. O cliente não precisa de conta.
 - Confirmação na tela e arquivo ICS para adicionar à agenda pessoal.
+- Login por código enviado ao e-mail, após configuração do Supabase.
+- Confirmações por e-mail para cliente e responsável, após configuração do Resend.
 - Persistência em D1 e reservas concorrentes protegidas por transação e índice único a cada 15 minutos.
 - Horário de Brasília, datas futuras até 90 dias.
 
 ## Uso
 
-1. Abra o site e entre com ChatGPT.
+1. Abra o site e entre pelo código enviado ao e-mail. Durante a configuração dos serviços, use a opção de vincular agenda existente para continuar com o acesso anterior.
 2. Em Disponibilidade, informe o nome do atendimento, a duração, o local e os horários.
 3. Use Compartilhar link para copiar o endereço que será enviado aos clientes.
 4. Acompanhe as reservas na Minha agenda. Clique em uma reserva para consultar os contatos ou cancelá-la.
 
-Não há sincronização com Google Calendar nem envio automático de e-mail/WhatsApp. As reservas são confirmadas na tela. O cancelamento deve ser comunicado ao cliente pelo responsável.
+Configure o login e os envios seguindo [docs/email-setup.md](docs/email-setup.md). O envio de e-mail depende de remetente verificado e serviços configurados. Não há sincronização com Google Calendar ou WhatsApp. O cancelamento deve ser comunicado ao cliente pelo responsável.
 
 ## Desenvolvimento local (Node 22.13 ou superior)
 
@@ -27,6 +29,7 @@ Não há sincronização com Google Calendar nem envio automático de e-mail/Wha
 npm ci --prefer-offline --no-audit --no-fund
 npm run build
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_cool_mojo.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_reflective_peter_parker.sql
 npm run dev
 ```
 
@@ -37,6 +40,7 @@ Aplique a migração apenas uma vez por banco local novo. A URL local é exibida
 ```powershell
 npx tsc --noEmit
 node scripts/smoke-test.mjs
+node scripts/email-test.mjs
 npm run build
 ```
 
