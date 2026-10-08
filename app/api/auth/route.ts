@@ -13,7 +13,7 @@ export async function POST(req:Request){
  const ipKey=await hashToken(`ip:${ip}`);
  if(!await rateLimit(ipKey,30,15*60000)||!await rateLimit(key,body.code?10:3,body.code?15*60000:10*60000))return json({error:'Muitas tentativas. Aguarde alguns minutos e tente novamente.'},429);
  if(!body.code){const {error}=await supabase().auth.signInWithOtp({email});if(error)return json({error:'Não foi possível enviar o código. Aguarde um minuto e tente novamente.'},400);return json({ok:true})}
- if(typeof body.code!=='string'||!/^\d{6}$/.test(body.code))return json({error:'Informe o código de 6 dígitos.'},400);
+ if(typeof body.code!=='string'||!/^\\d{8}$/.test(body.code))return json({error:'Informe o código de 6 dígitos.'},400);
  const {data,error}=await supabase().auth.verifyOtp({email,token:body.code,type:'email'});
  if(error||!data.user?.email_confirmed_at||!data.user.email)return json({error:'Código inválido ou expirado. Solicite outro código.'},400);
  const verifiedEmail=data.user.email.toLowerCase();const token=Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,'0')).join('');
@@ -25,4 +25,5 @@ export async function POST(req:Request){
  }catch(e){return failure(e)}
 }
 export async function DELETE(req:Request){try{if(!sameOrigin(req)||!req.headers.get('origin'))return json({error:'Origem inválida.'},403);const jar=await cookies();const token=jar.get(sessionCookie)?.value;if(token)await db().prepare('DELETE FROM email_sessions WHERE hash=?').bind(await hashToken(token)).run();jar.delete(sessionCookie);return json({ok:true})}catch(e){return failure(e)}}
+
 
