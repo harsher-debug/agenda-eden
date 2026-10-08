@@ -16,7 +16,7 @@ import {CalendarData,Booking,defaults,dateKey,todayKey,parseDay,weekdays,timeLab
 const initial:CalendarData={id:'',name:'Agenda Éden',service:'Atendimento',duration:60,hours:defaults,location:'A combinar',active:1};
 const monthLabel=(d:Date)=>d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
 function addDays(day:string,n:number){const d=parseDay(day);d.setDate(d.getDate()+n);return dateKey(d);}
-export function Brand(){return <div className="brand"><span className="brand-mark"><Leaf size={23}/></span><span>éden<span className="brand-sub">AGENDA</span></span></div>}
+export function Brand(){return <div className="brand"><span className="brand-mark"><img src="/eden-logo.png" alt=""/></span><span>éden<span className="brand-sub">AGENDA</span></span></div>}
 export function MiniCalendar({selected,onSelect,publicMode=false}:{selected:string;onSelect:(v:string)=>void;publicMode?:boolean}){
  const [month,setMonth]=useState(()=>new Date(parseDay(selected).getFullYear(),parseDay(selected).getMonth(),1,12));
  useEffect(()=>{const d=parseDay(selected);setMonth(new Date(d.getFullYear(),d.getMonth(),1,12))},[selected]);
